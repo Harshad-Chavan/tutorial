@@ -30,7 +30,7 @@ from snippets.models import Snippet, LANGUAGE_CHOICES, STYLE_CHOICES
 
 
  ## refactoring our serializer using the ModelSerializer class.
- class SnippetSerializer(serializers.ModelSerializer):
+class SnippetSerializer(serializers.ModelSerializer):
      class Meta:
         model = Snippet
         fields = ['id', 'title', 'code', 'linenos', 'language', 'style']

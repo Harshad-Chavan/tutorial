@@ -9,7 +9,7 @@ def snippet_list(request):
     if request.method == "GET":
         snippets = Snippet.objects.all()
         serializer = SnippetSerializer(snippets,many=True)
-        return HttpResponse(serializer.data,safe=False)
+        return HttpResponse(serializer.data)
     elif request.method == "POST":
         data = JSONParser().parse(request)
         serializer = SnippetSerializer(data=data)
