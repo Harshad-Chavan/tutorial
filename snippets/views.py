@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from snippets.models import Snippet
-from snippets.serializers import SnippetSerializer
+from snippets.serializers import SnippetSerializer,UserSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,6 +12,10 @@ from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework import generics
 
+
+#Import for user accsess
+from django.contrib.auth.models import User
+from rest_framework import permissions
 
 # @csrf_exempt
 # def snippet_list(request):
@@ -159,10 +163,22 @@ from rest_framework import generics
 
 #REFACTOR USING GENERIC VIEWS
 class SnippetList(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
